@@ -1,0 +1,33 @@
+version: "3"
+services:
+  nginx1:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8081:80
+    volumes:
+      - "./bono1:/var/www/bono1"
+      - "./haccp-dashboard:/var/www/haccp-dashboard"
+      # - "./test:/etc/nginx/html/test"
+      # /etc/nginx/htmlindex.php
+
+    depends_on:
+      - fpm1
+    networks:
+      - local-net
+
+  fpm1:
+    image: docker_php73:latest
+    volumes:
+      - "./bono1:/var/www/bono1"
+      - "./haccp-dashboard:/var/www/haccp-dashboard"
+
+    expose:
+      - 9000
+    networks:
+      - local-net
+
+networks:
+  local-net:
+    external: true
